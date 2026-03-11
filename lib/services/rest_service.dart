@@ -1,32 +1,25 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/country_model.dart';
-import '../core/api_constants.dart';
 
 class RestService {
 
   Future<List<Country>> fetchCountries() async {
 
-    final url = Uri.parse(
-      ApiConstants.baseUrl + ApiConstants.allCountries
-    );
+    final url = Uri.parse("https://restcountries.com/v3.1/all?fields=name,capital,region,population,flags");
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
 
-      List data = jsonDecode(response.body);
+      List data = json.decode(response.body);
 
-      return data
-          .map((json) => Country.fromJson(json))
-          .toList();
+      return data.map((e) => Country.fromJson(e)).toList();
 
     } else {
 
-      throw Exception("Error loading countries");
+      throw Exception("Failed to load countries");
 
     }
-
   }
-
 }

@@ -12,10 +12,7 @@ class CountryCard extends StatelessWidget {
 
     return Card(
 
-      margin: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
 
       child: ListTile(
 
@@ -34,9 +31,6 @@ class CountryCard extends StatelessWidget {
         ),
 
       ),
-
     );
-
   }
-
 }

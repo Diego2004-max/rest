@@ -9,7 +9,6 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -20,11 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-
     super.initState();
-
     countries = controller.getCountries();
-
   }
 
   @override
@@ -52,8 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           if (snapshot.hasError) {
 
-            return const Center(
-              child: Text("Error loading countries"),
+            return Center(
+              child: Text(
+                "Error loading countries\n${snapshot.error}",
+                textAlign: TextAlign.center,
+              ),
             );
 
           }
@@ -79,7 +78,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
     );
-
   }
-
 }

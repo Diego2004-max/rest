@@ -14,16 +14,20 @@ class Country {
     required this.flag,
   });
 
-  factory Country.fromJson(Map<String, dynamic> json) {
+    factory Country.fromJson(Map<String, dynamic> json) {
+
+    String capitalName = "No capital";
+
+    if (json["capital"] != null && json["capital"].length > 0) {
+      capitalName = json["capital"][0];
+    }
 
     return Country(
-      name: json["name"]["common"] ?? "",
-      capital: json["capital"] != null ? json["capital"][0] : "N/A",
-      region: json["region"] ?? "",
+      name: json["name"]["common"] ?? "Unknown",
+      capital: capitalName,
+      region: json["region"] ?? "Unknown",
       population: json["population"] ?? 0,
       flag: json["flags"]["png"] ?? "",
     );
-
   }
-
 }

@@ -5,10 +5,9 @@ class CountryController {
 
   final RestService _service = RestService();
 
-  Future<List<Country>> getCountries() {
+  Future<List<Country>> getCountries() async {
 
-    return _service.fetchCountries();
+    return await _service.fetchCountries();
 
   }
-
 }
