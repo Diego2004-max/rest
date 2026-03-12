@@ -4,7 +4,6 @@ import '../models/country_model.dart';
 import '../widgets/country_card.dart';
 
 class HomeScreen extends StatefulWidget {
-
   const HomeScreen({super.key});
 
   @override
@@ -15,12 +14,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final CountryController controller = CountryController();
 
-  late Future<List<Country>> countries;
+  List<Country> countries = [];
+  List<Country> filteredCountries = [];
+
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    countries = controller.getCountries();
+    loadCountries();
+  }
+
+  void loadCountries() async {
+
+    final data = await controller.getCountries();
+
+    setState(() {
+      countries = data;
+      filteredCountries = data;
+      loading = false;
+    });
+  }
+
+  void searchCountry(String query) {
+
+    final results = countries.where((country) {
+
+      final name = country.name.toLowerCase();
+      final input = query.toLowerCase();
+
+      return name.contains(input);
+
+    }).toList();
+
+    setState(() {
+      filteredCountries = results;
+    });
+
   }
 
   @override
@@ -32,51 +62,44 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Global Explorer"),
       ),
 
-      body: FutureBuilder<List<Country>>(
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
 
-        future: countries,
+              children: [
 
-        builder: (context, snapshot) {
+                Padding(
+                  padding: const EdgeInsets.all(10),
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
+                  child: TextField(
 
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+                    decoration: const InputDecoration(
+                      labelText: "Search country",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
 
-          }
+                    onChanged: searchCountry,
+                  ),
+                ),
 
-          if (snapshot.hasError) {
+                Expanded(
+                  child: ListView.builder(
 
-            return Center(
-              child: Text(
-                "Error loading countries\n${snapshot.error}",
-                textAlign: TextAlign.center,
-              ),
-            );
+                    itemCount: filteredCountries.length,
 
-          }
+                    itemBuilder: (context, index) {
 
-          final data = snapshot.data!;
+                      return CountryCard(
+                        country: filteredCountries[index],
+                      );
 
-          return ListView.builder(
+                    },
+                  ),
+                ),
 
-            itemCount: data.length,
-
-            itemBuilder: (context, index) {
-
-              return CountryCard(
-                country: data[index],
-              );
-
-            },
-
-          );
-
-        },
-
-      ),
-
+              ],
+            ),
     );
   }
 }

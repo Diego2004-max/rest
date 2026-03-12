@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/country_model.dart';
+import '../screens/detail_screen.dart';
 
 class CountryCard extends StatelessWidget {
 
@@ -16,12 +17,18 @@ class CountryCard extends StatelessWidget {
 
       child: ListTile(
 
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailScreen(country: country),
+            ),
+          );
+        },
+
         leading: Image.network(
           country.flag,
           width: 50,
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.flag);
-          },
         ),
 
         title: Text(country.name),
@@ -31,6 +38,7 @@ class CountryCard extends StatelessWidget {
         ),
 
       ),
+
     );
   }
 }
