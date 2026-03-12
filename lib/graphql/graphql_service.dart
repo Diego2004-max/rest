@@ -5,21 +5,24 @@ class GraphQLService {
   static final HttpLink httpLink =
       HttpLink('https://countries.trevorblades.com/');
 
-  static GraphQLClient client = GraphQLClient(
+  final GraphQLClient client = GraphQLClient(
     link: httpLink,
     cache: GraphQLCache(),
   );
 
-  Future<List<dynamic>> getCountries() async {
+  Future<List<dynamic>> fetchCountries() async {
 
     const String query = """
-      query {
-        countries {
+    query {
+      countries {
+        name
+        capital
+        emoji
+        continent {
           name
-          capital
-          emoji
         }
       }
+    }
     """;
 
     final result = await client.query(
@@ -28,7 +31,10 @@ class GraphQLService {
       ),
     );
 
-    return result.data?['countries'] ?? [];
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
+    }
 
+    return result.data?['countries'] ?? [];
   }
 }

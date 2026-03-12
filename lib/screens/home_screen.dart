@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/country_controller.dart';
+import '../controllers/graphql_controller.dart';
 import '../models/country_model.dart';
 import '../widgets/country_card.dart';
 
@@ -13,11 +14,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final CountryController controller = CountryController();
+  final GraphQLController graphqlController = GraphQLController();
 
   List<Country> countries = [];
   List<Country> filteredCountries = [];
 
   bool loading = true;
+  bool useGraphQL = false;
 
   @override
   void initState() {
@@ -27,7 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void loadCountries() async {
 
-    final data = await controller.getCountries();
+    List<Country> data;
+
+    if (useGraphQL) {
+      data = await graphqlController.getCountries();
+    } else {
+      data = await controller.getCountries();
+    }
 
     setState(() {
       countries = data;
@@ -60,6 +69,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
       appBar: AppBar(
         title: const Text("Global Explorer"),
+
+        actions: [
+
+          Row(
+            children: [
+
+              const Text("REST"),
+
+              Switch(
+                value: useGraphQL,
+                onChanged: (value) {
+
+                  setState(() {
+                    useGraphQL = value;
+                    loading = true;
+                  });
+
+                  loadCountries();
+                },
+              ),
+
+              const Text("GraphQL"),
+
+            ],
+          )
+
+        ],
       ),
 
       body: loading
