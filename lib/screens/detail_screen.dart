@@ -10,6 +10,8 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    bool isUrl = country.flag.startsWith("http");
+
     return Scaffold(
 
       appBar: AppBar(
@@ -17,38 +19,49 @@ class DetailScreen extends StatelessWidget {
       ),
 
       body: Padding(
+
         padding: const EdgeInsets.all(20),
 
         child: Column(
+
           crossAxisAlignment: CrossAxisAlignment.center,
 
           children: [
 
-            Image.network(
-              country.flag,
-              height: 120,
-            ),
-
             const SizedBox(height: 20),
+
+            isUrl
+                ? Image.network(
+                    country.flag,
+                    width: 150,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  )
+                : Text(
+                    country.flag,
+                    style: const TextStyle(fontSize: 100),
+                  ),
+
+            const SizedBox(height: 30),
 
             Text(
-              country.name,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              "Capital: ${country.capital}",
+              style: const TextStyle(fontSize: 20),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
-            Text("Capital: ${country.capital}",
-                style: const TextStyle(fontSize: 18)),
+            Text(
+              "Region: ${country.region}",
+              style: const TextStyle(fontSize: 20),
+            ),
 
-            Text("Region: ${country.region}",
-                style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 10),
 
-            Text("Population: ${country.population}",
-                style: const TextStyle(fontSize: 18)),
+            Text(
+              "Population: ${country.population}",
+              style: const TextStyle(fontSize: 20),
+            ),
 
           ],
         ),
